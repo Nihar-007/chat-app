@@ -13,8 +13,9 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: true // Allow cookies to be sent with requests
+  origin: "*",
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  // credentials: true // Allow cookies to be sent with requests
 }))
 
 app.get('/', (req, res) => {
@@ -23,12 +24,23 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoute)
 
+app.post('/api/test', (req, res) => {
+  const { name, age } = req.body
+  console.log('Test API called with:', name, age)
+  res.status(200).json({ message: 'Test API successful', name, age })
+})
+
+app.get('/api/test', (req, res) => {
+  console.log('Test API GET called')
+  res.status(200).json({ message: 'Test API GET successful' })
+})
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500).send('Something went wrong!')
 })
 
-server.listen(process.env.PORT || 5000, () => {
+server.listen(process.env.PORT || 5000, "0.0.0.0",() => {
   console.log(`Server is running on port ${process.env.PORT || 5000}`)
 })

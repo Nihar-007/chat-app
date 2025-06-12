@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import ChatPage from './pages/ChatPage'
-import Lobby from './pages/Lobby/'
+import Lobby from './pages/Lobby'
 import './App.css'
 import Room from './pages/Room'
 

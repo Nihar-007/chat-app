@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSocket } from '../SocketProvider'
+import { use } from 'react'
 
 function Lobby() {
     const [name, setName] = useState('')
     const [phno, setPhno] = useState('')
+    const baseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:5000'
     const navigate = useNavigate()
     const socket = useSocket()
 
@@ -26,6 +28,27 @@ function Lobby() {
         socket.off("user:details", handleUserJoin)
       }
     }, [socket, handleUserJoin])
+
+  useEffect(() => {
+
+    fetch(`${baseUrl}/api/test`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: "nihar", age: 21 }),
+    })
+
+    fetch(`${baseUrl}/api/test`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        },
+      })
+      .then(res => res.json())
+      .then(data => console.log('GET /api/test:', data))
+      .catch(err => console.error(err))
+    }, [baseUrl])
     
 
   return (

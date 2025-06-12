@@ -1,16 +1,22 @@
 import { Server } from 'socket.io';
-import { createServer } from 'http';
+import { createServer } from 'https';
 import express from 'express';
 import dotenv from 'dotenv';
+import fs from 'fs'
 
 dotenv.config();
 
 const app = express()
-const server = createServer(app);
+// const sslOptions = {
+//   key: fs.readFileSync(process.env.SSL_KEY_PATH || '../cert/key.pem'),
+//   cert: fs.readFileSync(process.env.SSL_CERT_PATH || '../cert/cert.pem')
+// };
+
+const server = createServer( app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
-    credentials: true
+    origin: "*",
+    // credentials: true
   }
 });
 
