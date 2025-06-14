@@ -13,7 +13,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: "*",
+  origin: "chat.ninin.xyz",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   // credentials: true // Allow cookies to be sent with requests
 }))
@@ -23,17 +23,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/auth', authRoute)
-
-app.post('/api/test', (req, res) => {
-  const { name, age } = req.body
-  console.log('Test API called with:', name, age)
-  res.status(200).json({ message: 'Test API successful', name, age })
-})
-
-app.get('/api/test', (req, res) => {
-  console.log('Test API GET called')
-  res.status(200).json({ message: 'Test API GET successful' })
-})
 
 // Error handling middleware
 app.use((err, req, res, next) => {

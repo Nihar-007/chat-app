@@ -1,0 +1,3 @@
+.local-video, .remote-video {
+  transform: scaleX(-1);
+}

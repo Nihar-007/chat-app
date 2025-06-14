@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
-import React, { createContext, useMemo, useContext } from 'react';
+import  { createContext, useMemo, useContext } from 'react';
 
 const SocketContext = createContext(null);
 
@@ -14,10 +14,10 @@ export const useSocket = () => {
 export const SocketProvider = (props) => {
     const baseUrl = import.meta.env.VITE_BASE_URL;
     
-    const socket = useMemo(() => io(baseUrl, {
+    const socket = useMemo(() => io("http://localhost:3000", {
         transports: ['websocket'],
+        path: "/socket.io/",
         autoConnect: true,
-        withCredentials: true
     }), []);
 
     socket.on('connect', () => {

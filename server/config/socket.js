@@ -1,22 +1,18 @@
 import { Server } from 'socket.io';
-import { createServer } from 'https';
+import { createServer } from 'http';
 import express from 'express';
 import dotenv from 'dotenv';
-import fs from 'fs'
 
 dotenv.config();
 
 const app = express()
-// const sslOptions = {
-//   key: fs.readFileSync(process.env.SSL_KEY_PATH || '../cert/key.pem'),
-//   cert: fs.readFileSync(process.env.SSL_CERT_PATH || '../cert/cert.pem')
-// };
 
 const server = createServer( app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
-    // credentials: true
+    origin: "chat.ninin.xyz",
+    path: "/socket.io/",
+    logger: console,
   }
 });
 
@@ -65,6 +61,10 @@ io.on('connection', (socket) => {
   socket.on("call:declined", ({ to: receiverID }) => {
     const name = socketIdToNameMap.get(socket.id);
     io.to(receiverID).emit("call:declined", { from: socket.id, name });
+  })
+
+  socket.on("call:end", ({ to: receiverID }) => {
+    io.to(receiverID).emit("call:end", { from: socket.id })
   })
 
   socket.on('disconnect', () => {
