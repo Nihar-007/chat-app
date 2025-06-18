@@ -35,8 +35,10 @@ io.on('connection', (socket) => {
   socket.on("user:details", ({name, phno}) => {
     nameToSocketIdMap.set(name, socket.id)
     socketIdToNameMap.set(socket.id, name)
+
     console.log("User details received:", name, phno, socket.id);
     socket.join(phno)
+    
     io.to(phno).emit("user:joined", { name, phno, socketID: socket.id })
     io.to(socket.id).emit("user:details", { name, phno, socketID: socket.id})
   })

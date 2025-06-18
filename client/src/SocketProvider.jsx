@@ -14,7 +14,7 @@ export const useSocket = () => {
 export const SocketProvider = (props) => {
     const baseUrl = import.meta.env.VITE_BASE_URL;
     
-    const socket = useMemo(() => io("http://localhost:3000", {
+    const socket = useMemo(() => io( baseUrl, {
         transports: ['websocket'],
         path: "/socket.io/",
         autoConnect: true,
