@@ -11,6 +11,8 @@ function Room() {
   const [remoteStream, setRemoteStream] = useState(null);
   const [remoteSocketId, setRemoteSocketId] = useState("");
   const [userDetails, setUserDetails] = useState({ name: "", phno: "" });
+  const [videoEnabled, setVideoEnabled] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -158,6 +160,18 @@ function Room() {
     [remoteStream]
   );
 
+  const handleVideoToggle = () => {
+    if(!localStream) return
+    localStream.getVideoTracks().forEach(track =>  track.enabled = !videoEnabled )
+    setVideoEnabled((val) => !val)
+  }
+    
+  const handleAudioToggle = () => {
+    if(!localStream) return
+    localStream.getAudioTracks().forEach((track) => (track.enabled = !audioEnabled))
+    setAudioEnabled((val) => !val)
+  }
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white flex flex-col items-center justify-center px-6 py-10 font-sans">
       <h1 className="text-5xl font-extrabold mb-8 tracking-tight text-white drop-shadow-lg">
@@ -177,14 +191,29 @@ function Room() {
         )}
       </div>
 
-      {remoteSocketId && (
-        <button
-          onClick={handleCall}
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-8 py-3 rounded-full text-white font-medium text-lg shadow-lg hover:scale-105 transition-transform duration-300 mb-8"
-        >
-          📞 Call {userDetails.name || "Peer"}
-        </button>
+      {localStream && (
+        <div className="flex gap-4 mb-8">
+          <button
+            onClick={handleVideoToggle}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-8 py-3 rounded-full text-white font-medium text-lg shadow-lg hover:scale-105 transition-transform duration-300 mb-8"
+          >Video {videoEnabled ? "ON" : "OFF"}</button>
+          <button
+            onClick={handleAudioToggle}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-8 py-3 rounded-full text-white font-medium text-lg shadow-lg hover:scale-105 transition-transform duration-300 mb-8"
+          >Audio {audioEnabled ? "ON" : "OFF"}</button>
+          <br />
+        </div>
       )}
+
+      {remoteSocketId && (
+          <button
+            onClick={handleCall}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-8 py-3 rounded-full text-white font-medium text-lg shadow-lg hover:scale-105 transition-transform duration-300 mb-8"
+          >
+            📞 Call {userDetails.name || "Peer"}
+          </button>
+      )}
+      <br />
       {remoteStream && (
         <button type="submit" onClick={handleEndCall}>
           End Call
