@@ -10,9 +10,10 @@ const app = express()
 const server = createServer( app);
 const io = new Server(server, {
   cors: {
-    origin: "chat.ninin.xyz",
+    origin: process.env.CLIENT_URL,
     path: "/socket.io/",
     logger: console,
+    credentials: true
   }
 });
 
