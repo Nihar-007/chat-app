@@ -18,6 +18,7 @@ export const SocketProvider = (props) => {
         transports: ['websocket'],
         path: "/socket.io/",
         autoConnect: true,
+        withCredentials: true,
     }), []);
 
     socket.on('connect', () => {
