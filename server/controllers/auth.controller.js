@@ -24,7 +24,7 @@ export const register = async (req, res) => {
       
     return res.status(200).json({ message: "OTP sent to email" });
   } catch (error) {
-    res.status(500).json({ message: 'Error registering user: ', error });
+    res.status(500).json({ message: `Error registering user: ${error}` });
     console.log("Error in auth controller - register: ", error)
   }
 }
@@ -42,7 +42,7 @@ export const verifyEmail = async (req,res) => {
     otpStore.delete(email)
     return res.status(201).json({ user: {name, phno, email}});
   } catch (error) {
-    res.status(500).json({ message: 'Error verifying email user: ', error });
+    res.status(500).json({ message: `Error verifying email user: ${error}` });
     console.log("Error in auth controller - verifyEmail: ", error)
   }
 }
@@ -50,19 +50,29 @@ export const verifyEmail = async (req,res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    let phno = null;
+
+    if (!email || !password) return res.status(400).json({ message: 'All fields are required' });
+    if (password.length < 6) return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    if (!email.includes("@")){ 
+      phno = Number(email)
+    }
     
-    const user = await User.findOne({ $or: [{email: email}, {phno: email}]})
+    const user = await User.findOne({ $or: [{email: email}, {phno: phno}]})
     if(user === null) return res.status(404).json({ message: 'User not found' });
-    
+  
     const isMatch = await bcrypt.compare(password, user.password)
     if(!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-    generateToken(user._id, res)
-    res.status(200).json({ message: 'Login successful',  user: {name: user.name, phno: user.phno, email: user.email} });
+    const token = await generateToken(user._id)
+    user.password = null; 
+    // console.log(user)
+    return {user, token}
+    // return res.status(200).json({ message: 'Login successful',  user: user });
     
   } catch (error) {
-    res.status(500).json({ message: 'Error logging in user: ', error });
     console.log("Error in auth controller - login: ", error)
+    return res.status(500).json({ message: 'Error logging in user: ', error });
   }
 }
 

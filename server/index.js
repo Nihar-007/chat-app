@@ -7,7 +7,6 @@ import authRoute from './routes/auth.route.js'
 import { app, server } from './config/socket.js'
 import { expressMiddleware } from '@as-integrations/express5';
 import createApolloServer from './graphql/index.js'
-import bodyParser from 'body-parser'
 
 dotenv.config()
 // const app = express()
@@ -27,7 +26,9 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/auth', authRoute)
-app.use('/graphql', expressMiddleware(await createApolloServer()))
+app.use('/graphql', expressMiddleware(await createApolloServer(), {
+  context: async ({ req, res }) => { return { req, res }},
+}))
 
 // Error handler
 app.use((err, req, res, next) => {

@@ -31,7 +31,7 @@ const createApolloServer = async () => {
             }
         },
         persistedQueries: true,
-        // context,
+        // context: ({req, res}) => ({req, res}),
         introspection: process.env.ENVIRONMENT === "development"
     })
 

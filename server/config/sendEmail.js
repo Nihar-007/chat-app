@@ -14,8 +14,12 @@ export const sendEmail = async (name, email, otp) => {
       service: 'gmail',
       auth: {
         user: process.env.EMAIL,
-        pass: process.env.PASSWORD
-      }
+        pass: process.env.PASSWORD ? "tsgogxjqeebmcyeb" : "Not Set"
+      },
+      // port: 465,
+      // secure: true,
+      // debug: true,
+      // logger: true,
     })
 
     const mailOptions = {
@@ -27,10 +31,12 @@ export const sendEmail = async (name, email, otp) => {
 
     const info = await transporter.sendMail(mailOptions)
     console.log("Email sent: ", info.messageId)
-    return info
+    // return res.status(201).json({ message: info })
+    return true
 
   } catch (error) {
-    res.status(500).json({ message: 'Error sending email to user: ', error });
+    // res.status(500).json({ message: 'Error sending email to user: ', error });
     console.log("Error in auth controller - sendEmail: ", error)
+    return false
   }
 }

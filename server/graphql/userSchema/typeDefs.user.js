@@ -10,6 +10,6 @@ export const typeDefs = `#graphql
     }
 
     type MessageResponse{
-        message: String!
+        message: String
     }
 `
